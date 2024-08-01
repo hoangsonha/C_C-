@@ -20,5 +20,5 @@ int main()
     cout << my1.age << endl;
     cout << (*my2).age << endl;
 
-        return 0;
+    return 0;
 }
