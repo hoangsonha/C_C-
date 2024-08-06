@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -30,7 +31,7 @@ public:
     Person(string name, int age, double weight, bool active = true) : name(name), age(age), weight(weight), active(active) {}
     ~Person()
     {
-        cout << "Da huy vung nho!!!" << endl;
+        cout << "Da huy vung nho!!!" << name << endl;
     }
     virtual void sleep()
     {
@@ -111,34 +112,115 @@ union Test // union là tất cả các biến nằm trung 1 chỗ -> thay đổ
 
 // cout << so.s << ", " << so.b << ", " << so.i << ", " << so.d << endl;
 
+// template function
+
+template <class T>
+T myABS(T value)
+{
+    return value >= 0 ? value : 0;
+}
+
+// template class
+
+template <class T>
+class MyEmployee
+{
+private:
+    vector<T> employees;
+
+public:
+    void add(const T &value)
+    {
+        employees.push_back(value);
+    }
+    void remove(const T &value)
+    {
+        employees.pop_back(value);
+    }
+
+    void getLastValue()
+    {
+        return employees.back();
+    }
+    void getFirstValue()
+    {
+        return employees.front();
+    }
+    int getSize()
+    {
+        return employees.size();
+    }
+    auto begin()
+    {
+        return employees.begin(); // phần từ đầu
+    }
+    auto end()
+    {
+        return employees.end(); // phần tử sau phần tử cuối cùng
+    }
+    void print()
+    {
+        for (auto it = employees.begin(); it != employees.end(); ++it)
+        {
+            cout << *it << endl;
+        }
+    }
+};
+
 int main()
 {
 
-    Person *man = new Man("Hoang Son Ha", 23, 59.5);
+    // Person *man = new Man("Hoang Son Ha", 23, 59.5);
 
-    (*man).toString();
-    (*man).sleep();
+    // (*man).toString();
+    // (*man).sleep();
 
-    Woman *woman = new Woman("Nguyen Thi Kim Ngan", 20, 45.5);
+    // Woman *woman = new Woman("Nguyen Thi Kim Ngan", 20, 45.5);
 
-    (*woman).toString();
+    // (*woman).toString();
 
-    delete man;
+    // delete man;
 
-    delete woman;
+    // delete woman;
 
-    man = nullptr;
+    // man = nullptr;
 
-    (*man).toString();
+    // (*man).toString();
 
-    woman = nullptr;
+    // woman = nullptr;
 
-    (*woman).toString();
+    // (*woman).toString();
 
     // if (sextoy == Sex::FEMALE)
     //     cout << "Female" << endl;
     // else if (sextoy == Sex::MALE)
     //     cout << "Male" << endl;
+
+    // template function
+
+    // cout << "Value ABS: " << myABS(6.5) << endl;
+
+    Person *man = new Person("Hoang Son Ha", 23, 59.5);
+
+    Person *man2 = new Person("Ha Son Hoang", 21, 43.5);
+
+    //  MyEmployee<Person> emps; // vector of object
+
+    MyEmployee<Person *> emps; // vector of pointer
+
+    emps.add(man);
+    emps.add(man2);
+
+    cout << emps.getSize() << endl;
+
+    // // copy phan tu
+
+    // for (Person *p : emps)
+    // {
+    //     cout << (*p).getName() << endl;
+    // }
+
+    emps.print();
 
     return 0;
 }
