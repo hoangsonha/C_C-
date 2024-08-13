@@ -4,223 +4,142 @@
 
 using namespace std;
 
+const double pi(3.14);
+
+class ITraditional
+{
+public:
+    virtual void print() const = 0;
+    virtual ~ITraditional()
+    {
+        cout << "Huy ITraditional";
+    }
+};
+
 enum Sex
 {
     MALE,
     FEMALE
+
 };
 
-string EnumToString(Sex sex)
+string convertSex(Sex sex)
 {
+    if (sex == Sex::MALE)
+        return "MALE";
     if (sex == Sex::FEMALE)
-        return "Female";
-    else if (sex == Sex::MALE)
-        return "Male";
-    return nullptr;
+        return "FEMALE";
+    return "unknown";
 };
 
-class Person
+// lớp implements lại lớp cơ sở (cha) thì sẽ k cần phải khai báo destructor() ở lớp dẫn xuất (con)
+
+class Person : public ITraditional
 {
 private:
     string name;
     int age;
-    double weight;
-    bool active;
+    Sex sex;
 
 public:
-    Person(string name, int age, double weight, bool active = true) : name(name), age(age), weight(weight), active(active) {}
+    Person(string name, int age, Sex sex) : name(name), age(age), sex(sex) {}
     ~Person()
     {
-        cout << "Da huy vung nho!!!" << name << endl;
-    }
-    virtual void sleep()
-    {
-        cout << name << " is sleeping" << endl;
+        cout << "Da huy vung nho cua " << name << endl;
     }
     string getName()
     {
         return name;
     }
+    virtual void toString();
+
+    void print() const override
+    {
+        cout << name << " dang choi nhac cu!" << endl;
+    }
+    void setAge(int age)
+    {
+        this->age = age;
+    }
     int getAge()
     {
-        return age;
-    }
-    bool getActive() { return active; }
-    double getWeight() { return weight; }
-    void toString()
-    {
-        cout << name << ", " << age << ", " << weight << ", " << active << endl;
+        return this->age;
     }
 };
 
-class Man : public Person
+void Person::toString()
 {
-private:
-    Sex sex = Sex::MALE;
-
-public:
-    Man(string name, int age, double weight, bool active = true) : Person(name, age, weight, active) {};
-    void sleep()
-    {
-        cout << getName() << " is sleeping with " << EnumToString(sex) << endl;
-    }
-    void toString()
-    {
-        cout << getName() << ", " << to_string(getAge()) << ", " << to_string(getWeight()) << ", " << to_string(getActive()) << ", " << EnumToString(sex) << endl;
-    }
-    void football()
-    {
-        cout << getName() << " is playing football" << endl;
-    }
-};
-
-class Woman : public Person
-{
-private:
-    Sex sex = Sex::FEMALE;
-
-public:
-    Woman(string name, int age, double weight, bool active = true) : Person(name, age, weight, active) {};
-    void sleep()
-    {
-        cout << getName() << " is sleeping with " << EnumToString(sex) << endl;
-    }
-    void toString()
-    {
-        cout << getName() << ", " << to_string(getAge()) << ", " << to_string(getWeight()) << ", " << to_string(getActive()) << ", " << EnumToString(sex) << endl;
-    }
-    void yoga()
-    {
-        cout << getName() << " is playing yoga" << endl;
-    }
-};
-
-union Test // union là tất cả các biến nằm trung 1 chỗ -> thay đổi 1 cái sẽ ảnh hưởng tới tất cả biến khác theo giá trị biến thay đổi
-{
-
-    bool s;
-    double d;
-    int i;
-    int b;
-} so;
-
-// so.s = true;
-
-// cout << so.s << ", " << so.b << ", " << so.i << ", " << so.d << endl;
-
-// so.i = 10;
-
-// cout << so.s << ", " << so.b << ", " << so.i << ", " << so.d << endl;
-
-// template function
-
-template <class T>
-T myABS(T value)
-{
-    return value >= 0 ? value : 0;
+    cout << name << " " << to_string(age) << " " << convertSex(sex) << endl;
 }
 
-// template class
-
-template <class T>
-class MyEmployee
+class GoodGirl : public Person
 {
 private:
-    vector<T> employees;
+    string character;
 
 public:
-    void add(const T &value)
+    GoodGirl(string name, int age, Sex sex, string character) : Person(name, age, sex), character(character) {}
+    ~GoodGirl()
     {
-        employees.push_back(value);
+        cout << "Huy vung nho cua good girl " << getName() << endl;
     }
-    void remove(const T &value)
+    void print() const override
     {
-        employees.pop_back(value);
+        cout << character << " in good girl dang choi nhac cu!" << endl;
     }
+    void toString()
+    {
+        cout << getName() << " and " << getAge() << " in good girl " << endl;
+    }
+};
 
-    void getLastValue()
+class BadGirl : public Person
+{
+private:
+    string makeup;
+
+public:
+    BadGirl(string name, int age, Sex sex, string makeup) : Person(name, age, sex), makeup(makeup) {}
+    ~BadGirl()
     {
-        return employees.back();
+        cout << "Huy vung nho cua bad girl " << getName() << endl;
     }
-    void getFirstValue()
+    void print() const override
     {
-        return employees.front();
+        cout << makeup << " in bad girl dang choi nhac cu!" << endl;
     }
-    int getSize()
+    void toString()
     {
-        return employees.size();
+        cout << getName() << " and " << getAge() << " in bad girl " << endl;
     }
-    auto begin()
+    void changeAge(int age)
     {
-        return employees.begin(); // phần từ đầu
-    }
-    auto end()
-    {
-        return employees.end(); // phần tử sau phần tử cuối cùng
-    }
-    void print()
-    {
-        for (auto it = employees.begin(); it != employees.end(); ++it)
-        {
-            cout << *it << endl;
-        }
+        Person::setAge(age);
     }
 };
 
 int main()
 {
+    Person *bad = new BadGirl("Ngan", 25, Sex::FEMALE, "hoa trang");
 
-    // Person *man = new Man("Hoang Son Ha", 23, 59.5);
+    // (bad).toString();
 
-    // (*man).toString();
-    // (*man).sleep();
+    // (bad).setAge(18);
 
-    // Woman *woman = new Woman("Nguyen Thi Kim Ngan", 20, 45.5);
+    // (bad).toString();
 
-    // (*woman).toString();
+    Person *bonhi = bad;
 
-    // delete man;
+    (*bonhi).setAge(18);
 
-    // delete woman;
+    (*bonhi).toString();
+    (*bad).toString();
 
-    // man = nullptr;
+    int a[5]{1, 2, 35, 6574, 5};
+    for (auto &item : a)
+    { // trường hợp k muốn thay đổi giá trị của phần tử trong mảng thì cho thêm const . ( const auto &item : a)
+        cout << item << " ";
+    }
 
-    // (*man).toString();
-
-    // woman = nullptr;
-
-    // (*woman).toString();
-
-    // if (sextoy == Sex::FEMALE)
-    //     cout << "Female" << endl;
-    // else if (sextoy == Sex::MALE)
-    //     cout << "Male" << endl;
-
-    // template function
-
-    // cout << "Value ABS: " << myABS(6.5) << endl;
-
-    Person *man = new Person("Hoang Son Ha", 23, 59.5);
-
-    Person *man2 = new Person("Ha Son Hoang", 21, 43.5);
-
-    //  MyEmployee<Person> emps; // vector of object
-
-    MyEmployee<Person *> emps; // vector of pointer
-
-    emps.add(man);
-    emps.add(man2);
-
-    cout << emps.getSize() << endl;
-
-    // // copy phan tu
-
-    // for (Person *p : emps)
-    // {
-    //     cout << (*p).getName() << endl;
-    // }
-
-    emps.print();
-
-    return 0;
+    cout << pi;
 }
